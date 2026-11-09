@@ -1,7 +1,7 @@
 # RV32I simulator — Group 11
 
 This is the agreed team baseline, using Python 3.9+ and only its standard library.
-It implements **ADDI, BEQ, and LW**. The full assignment instruction set remains
+It implements **ADDI, ADD, SUB, SLT, SLTU, BEQ, and LW**. The full assignment instruction set remains
 team work; supplied programs will currently report unsupported instructions.
 
 ## Run
@@ -70,7 +70,7 @@ The default execution limit is 1,000,000 instructions; change it with
 | Control/memory owner | control_flow.py: other branches, JAL/JALR, exit ECALL; memory.py: other loads and stores |
 | Everyone | Tests for owned instructions, full-program checks, report, Ubuntu check, TA demo |
 
-Arithmetic remaining: ADD, SUB, SLT, SLTU, XOR, OR, AND, SLL, SRL, SRA,
+Arithmetic remaining: XOR, OR, AND, SLL, SRL, SRA,
 SLTI, SLTIU, XORI, ORI, ANDI, SLLI, SRLI, SRAI, LUI, AUIPC.
 
 Control/memory remaining: BNE, BLT, BGE, BLTU, BGEU, JAL, JALR, exit ECALL,

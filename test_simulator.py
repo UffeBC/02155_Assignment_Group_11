@@ -27,6 +27,48 @@ def beq(rs1, rs2, offset):
 
 
 class BaselineTests(unittest.TestCase):
+    def test_register_arithmetic(self):
+        # Literal instruction encodings: ADD, SUB, SLT, SLTU x3, x1, x2.
+        cases = (
+            (0x002081B3, 5, 6, 11),
+            (0x002081B3, 0xFFFFFFFF, 1, 0),
+            (0x402081B3, 5, 6, 0xFFFFFFFF),
+            (0x402081B3, 0x80000000, 1, 0x7FFFFFFF),
+            (0x0020A1B3, 0xFFFFFFFF, 1, 1),
+            (0x0020A1B3, 0x80000000, 0x7FFFFFFF, 1),
+            (0x0020A1B3, 7, 7, 0),
+            (0x0020B1B3, 0xFFFFFFFF, 1, 0),
+            (0x0020B1B3, 1, 0xFFFFFFFF, 1),
+            (0x0020B1B3, 7, 7, 0),
+        )
+        for word, left, right, expected in cases:
+            with self.subTest(word=hex(word), left=left, right=right):
+                cpu = CPU(program(word))
+                cpu.write_reg(1, left)
+                cpu.write_reg(2, right)
+                cpu.run()
+                self.assertEqual(cpu.read_reg(3), expected)
+                self.assertEqual(cpu.pc, 4)
+
+    def test_register_arithmetic_zero_and_overlapping_destination(self):
+        for word in (0x002081B3, 0x402081B3, 0x0020A1B3, 0x0020B1B3):
+            with self.subTest(word=hex(word)):
+                cpu = CPU(program(word & ~(31 << 7)))  # rd = x0
+                cpu.write_reg(1, 5)
+                cpu.write_reg(2, 6)
+                cpu.run()
+                self.assertEqual(cpu.read_reg(0), 0)
+        cpu = CPU(program(0x002080B3))  # ADD x1, x1, x2
+        cpu.write_reg(1, 5)
+        cpu.write_reg(2, 6)
+        cpu.run()
+        self.assertEqual(cpu.read_reg(1), 11)
+
+    def test_unsupported_register_arithmetic_encoding(self):
+        # MUL shares ADD's funct3 but has funct7=1; it is not implemented.
+        with self.assertRaisesRegex(SimulatorError, "Unsupported"):
+            CPU(program(0x022081B3)).run()
+
     def test_addi_negative_wrap_and_zero(self):
         cpu = CPU(program(addi(1, 0, -1), addi(2, 1, 1), addi(0, 0, 9)))
         self.assertEqual(cpu.run(), 3)
