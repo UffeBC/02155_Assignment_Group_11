@@ -70,8 +70,7 @@ The default execution limit is 1,000,000 instructions; change it with
 | Control/memory owner | control_flow.py: other branches, JAL/JALR, exit ECALL; memory.py: other loads and stores |
 | Everyone | Tests for owned instructions, full-program checks, report, Ubuntu check, TA demo |
 
-Arithmetic remaining: XOR, OR, AND, SLL, SRL, SRA,
-SLTI, SLTIU, XORI, ORI, ANDI, SLLI, SRLI, SRAI, LUI, AUIPC.
+Arithmetic remaining: None
 
 Control/memory remaining: BNE, BLT, BGE, BLTU, BGEU, JAL, JALR, exit ECALL,
 LB, LH, LBU, LHU, SB, SH, SW.
