@@ -1,7 +1,7 @@
 # RV32I simulator — Group 11
 
 This is the agreed team baseline, using Python 3.9+ and only its standard library.
-It implements **ADDI, ADD, SUB, SLT, SLTU, BEQ, and LW**. The full assignment instruction set remains
+It implements **ADDI, ADD, SUB, SLT, SLTU, BEQ, LB, LH, LW, LBU, LHU, SB, SH, and SW**. The full assignment instruction set remains
 team work; supplied programs will currently report unsupported instructions.
 
 ## Run
@@ -22,6 +22,7 @@ On Windows, use `py -3` in place of `python3`.
 py -3 main.py examples/baseline.bin registers.res
 py -3 main.py examples/baseline.bin registers.res --trace
 py -3 -m unittest -v
+py -3 -m unittest -v test_memory
 py -3 run_all_tests.py
 py -3 run_all_tests.py task1 --timeout 10
 ```
@@ -48,6 +49,9 @@ The default execution limit is 1,000,000 instructions; change it with
 - Memory helpers check bounds and use little-endian byte order. Unaligned data
   accesses are supported (the supplied width test uses them); instruction
   fetch requires four-byte alignment.
+- Memory tests are in `test_memory.py`. They cover all eight load/store instructions,
+  signed values, offsets, bounds, and a program using arithmetic and BEQ together.
+  Store handlers decode the signed S-immediate from `instruction.word` in memory.py.
 - `Instruction.decode(word)` provides opcode, rd, rs1, rs2, funct3, funct7,
   signed I-immediate, and signed B-immediate. Add other immediate formats as
   their instructions are implemented. `sign_extend` and `signed32` are in cpu.py.
@@ -72,8 +76,7 @@ The default execution limit is 1,000,000 instructions; change it with
 
 Arithmetic remaining: None
 
-Control/memory remaining: BNE, BLT, BGE, BLTU, BGEU, JAL, JALR, exit ECALL,
-LB, LH, LBU, LHU, SB, SH, SW.
+Control/memory remaining: BNE, BLT, BGE, BLTU, BGEU, JAL, JALR, exit ECALL.
 
 The supplied-program runner discovers .bin/.res pairs, uses a subprocess timeout,
 reports mismatches and execution errors, and exits nonzero unless all pass.
