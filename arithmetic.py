@@ -205,7 +205,7 @@ def execute_srl(cpu, instruction):
     shift_amount = right & 0x1F
 
     # perform the shift right logical operation with python >>
-    result = left >> right
+    result = left >> shift_amount
 
     # write the result back to the destination register
     cpu.write_reg(instruction.rd, result)
