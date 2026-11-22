@@ -54,6 +54,7 @@ class CPU:
         self.program_size = len(program)
         self.registers = [0] * 32
         self.pc = 0
+        self.halted = False
 
     def read_reg(self, index):
         return 0 if index == 0 else self.registers[index]
@@ -64,7 +65,7 @@ class CPU:
 
     def step(self):
         """Execute once; return False if PC has passed the program."""
-        if self.pc >= self.program_size:
+        if self.halted or self.pc >= self.program_size:
             return False
         if self.pc < 0 or self.pc % 4:
             raise SimulatorError(f"Invalid instruction address 0x{self.pc:08x}")
@@ -77,7 +78,7 @@ class CPU:
                 return True
         raise SimulatorError(
             f"Unsupported instruction 0x{instruction.word:08x} at PC 0x{self.pc:08x}")
-
+    
     def run(self, max_steps=1_000_000, trace=False):
         steps = 0
         while self.pc < self.program_size:

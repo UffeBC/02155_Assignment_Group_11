@@ -20,8 +20,8 @@ def execute(cpu, instruction):
         return execute_jal(cpu, instruction)  
     elif instruction.opcode == 0x67 and instruction.funct3 == 0:
         return execute_jalr(cpu,instruction)   # I type  
-    elif instruction.opcode == 0x73 and instruction.funct3 == 0 and instruction.imm_i == 0: #Ecall and Ebreak have the same opcode, so imm_b(12-bit immediate field) tells them appart
-        return execute_ecall(cpu, instruction)     #         
+    elif instruction.opcode == 0x73 and instruction.funct3 == 0 and instruction.imm_i == 0: #imm_i:Ecall and Ebreak have the same opcode, so imm_b(12-bit immediate field) tells them appart
+        return execute_ecall(cpu, instruction)     #        
   
     return False, None
 
@@ -88,4 +88,4 @@ def execute_ecall(cpu, instruction):
         cpu.halted = True
         return True, None
     from cpu import SimulatorError
-    raise SimulatorError
+    raise SimulatorError(f"Unsupported ecall {call} at PC 0x{cpu.pc:08x}")
