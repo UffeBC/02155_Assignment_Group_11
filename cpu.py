@@ -81,7 +81,7 @@ class CPU:
     
     def run(self, max_steps=1_000_000, trace=False):
         steps = 0
-        while self.pc < self.program_size:
+        while  not self.halted and self.pc < self.program_size:
             if steps >= max_steps:
                 raise SimulatorError(f"Execution limit reached ({max_steps} instructions)")
             self.step()
